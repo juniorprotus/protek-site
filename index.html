@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protek — Code & Design Studio</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Protek is a full-service tech studio offering custom software development and graphic design. Built for clarity. Engineered for impact.">
+  <meta name="author" content="Protus — Protek Studio">
+  <meta name="keywords" content="web development, graphic design, branding, software, full-stack, Protek">
+
+  <!-- Open Graph (WhatsApp, Facebook, LinkedIn previews) -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://protek.dev/">
+  <meta property="og:title"       content="Protek — Code & Design Studio">
+  <meta property="og:description" content="Full-service digital studio. Custom code and design, unified under one roof.">
+  <meta property="og:image"       content="https://protek.dev/og-preview.png">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter / X card -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Protek — Code & Design Studio">
+  <meta name="twitter:description" content="Full-service digital studio. Custom code and design, unified under one roof.">
+  <meta name="twitter:image"       content="https://protek.dev/og-preview.png">
+
+  <!-- Favicon -->
+  <link rel="icon"             type="image/png" sizes="32x32"   href="favicon-32.png">
+  <link rel="icon"             type="image/png" sizes="64x64"   href="favicon-64.png">
+  <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0B0E14;
+    --paper: #F5F2EC;
+    --gold: #C9A84C;
+    --gold-light: #E8D08A;
+    --steel: #1E2535;
+    --slate: #6B7385;
+    --white: #FAFAF8;
+    --error: #e05a5a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 4vw;
+    background: rgba(11,14,20,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .nav-wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .nav-wordmark span { color: var(--gold); font-style: italic; }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--slate);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    padding: 0.5rem 1.25rem;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    position: relative;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, #1a2035 0%, var(--ink) 70%);
+    overflow: hidden;
+    padding-top: 80px;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridPan 25s linear infinite;
+  }
+
+  @keyframes gridPan {
+    from { transform: translate(0,0); }
+    to   { transform: translate(60px,60px); }
+  }
+
+  .hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 1s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.3);
+    display: inline-block;
+    padding: 6px 16px;
+    margin-bottom: 2rem;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(5rem, 14vw, 11rem);
+    font-weight: 300;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--white);
+  }
+
+  .hero h1 span {
+    color: var(--gold);
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--slate);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .hero-desc {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: rgba(250,250,248,0.5);
+    font-weight: 300;
+  }
+
+  .hero-btns {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    padding: 0.8rem 2rem;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: var(--gold-light); }
+
+  .btn-ghost {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.8rem 2rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 6rem 5vw;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 3rem;
+    color: var(--white);
+  }
+
+  /* ── NAMES ── */
+  .names-section { border-top: 1px solid rgba(255,255,255,0.07); }
+
+  .names-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.05);
+    margin-bottom: 2rem;
+  }
+
+  .name-card {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    transition: background 0.25s;
+  }
+
+  .name-card:hover { background: var(--steel); }
+
+  .name-card.featured {
+    background: var(--steel);
+    border-left: 3px solid var(--gold);
+  }
+
+  .name-card .badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .name-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .name-card p {
+    font-size: 0.82rem;
+    color: var(--slate);
+    line-height: 1.6;
+  }
+
+  /* ── LOGO ── */
+  .logo-showcase { border-top: 1px solid rgba(255,255,255,0.07); }
+
+  .logo-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5px;
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 3rem;
+  }
+
+  .logo-bg-dark, .logo-bg-light, .logo-bg-color, .logo-bg-minimal {
+    padding: 4rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+  }
+
+  .logo-bg-dark    { background: var(--ink); }
+  .logo-bg-light   { background: var(--paper); }
+  .logo-bg-color   { background: var(--gold); }
+  .logo-bg-minimal { background: var(--steel); }
+
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--white);
+  }
+
+  .logo-wordmark .accent { font-style: italic; color: var(--gold); }
+  .logo-bg-light .logo-wordmark { color: var(--ink); }
+  .logo-bg-light .logo-wordmark .accent { color: #B8922A; }
+  .logo-bg-color .logo-wordmark { color: var(--ink); }
+  .logo-bg-color .logo-wordmark .accent { color: rgba(0,0,0,0.5); }
+
+  .logo-tagline {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-top: 0.25rem;
+  }
+
+  .logo-bg-light .logo-tagline   { color: #999; }
+  .logo-bg-color .logo-tagline   { color: rgba(0,0,0,0.45); }
+
+  .panel-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    position: absolute;
+    bottom: 1rem;
+    right: 1.25rem;
+    opacity: 0.4;
+    color: var(--slate);
+  }
+
+  .logo-bg-light .panel-label { color: #aaa; }
+  .logo-bg-color .panel-label { color: rgba(0,0,0,0.4); }
+
+  /* ── PALETTE ── */
+  .palette-section { border-top: 1px solid rgba(255,255,255,0.07); }
+
+  .palette {
+    display: flex;
+    height: 160px;
+    margin-bottom: 2.5rem;
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+
+  .swatch {
+    flex: 1;
+    position: relative;
+    transition: flex 0.4s ease;
+    cursor: default;
+  }
+
+  .swatch:hover { flex: 2.5; }
+
+  .swatch-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.4));
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .swatch:hover .swatch-info { opacity: 1; }
+  .swatch-name { color: rgba(255,255,255,0.9); display: block; margin-bottom: 2px; }
+  .swatch-hex  { color: rgba(255,255,255,0.55); }
+
+  .sw-ink   { background: #0B0E14; }
+  .sw-steel { background: #1E2535; }
+  .sw-slate { background: #6B7385; }
+  .sw-gold  { background: #C9A84C; }
+  .sw-goldl { background: #E8D08A; }
+  .sw-paper { background: #F5F2EC; }
+
+  .palette-note {
+    font-size: 0.82rem;
+    color: var(--slate);
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .type-section { border-top: 1px solid rgba(255,255,255,0.07); }
+
+  .type-rows { display: flex; flex-direction: column; gap: 1.5px; background: rgba(255,255,255,0.05); }
+
+  .type-row {
+    background: var(--ink);
+    padding: 2.5rem;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .type-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--slate);
+  }
+
+  .type-meta strong {
+    display: block;
+    color: var(--gold);
+    font-size: 0.7rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .t-display { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 400; line-height: 1; color: var(--white); }
+  .t-heading { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 600; color: var(--white); }
+  .t-body    { font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 300; color: rgba(250,250,248,0.7); line-height: 1.7; }
+  .t-mono    { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--gold); letter-spacing: 0.08em; }
+
+  /* ── VOICE ── */
+  .voice-section { border-top: 1px solid rgba(255,255,255,0.07); }
+
+  .voice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5px;
+    background: rgba(255,255,255,0.05);
+    margin-bottom: 2rem;
+  }
+
+  .voice-item { background: var(--ink); padding: 2rem 1.75rem; }
+  .voice-item .icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .voice-item h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem; }
+  .voice-item p  { font-size: 0.8rem; color: var(--slate); line-height: 1.6; }
+
+  /* ── CONTACT SECTION ── */
+  .contact-section {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .contact-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 90vh;
+  }
+
+  /* Left panel */
+  .contact-left {
+    background: var(--steel);
+    padding: 5rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-left::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .contact-left-body { position: relative; z-index: 1; }
+
+  .contact-left h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 3.5vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 1.25rem;
+  }
+
+  .contact-left h2 em { font-style: italic; color: var(--gold); }
+
+  .contact-left p {
+    font-size: 0.88rem;
+    color: var(--slate);
+    line-height: 1.8;
+    max-width: 340px;
+    margin-bottom: 3rem;
+  }
+
+  .services-list { display: flex; flex-direction: column; gap: 1px; }
+
+  .service-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.78rem;
+    color: var(--slate);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .service-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+
+  .contact-left-footer { position: relative; z-index: 1; }
+  .contact-left-footer p { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; color: rgba(107,115,133,0.5); text-transform: uppercase; }
+
+  /* Right panel (form) */
+  .contact-right {
+    background: var(--ink);
+    padding: 5rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .form-label-top {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 2.5rem;
+  }
+
+  .form-label-top::before { content: ''; width: 28px; height: 1px; background: var(--gold); }
+
+  .form-group { margin-bottom: 1.75rem; position: relative; }
+
+  .form-group label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 0.6rem;
+    transition: color 0.2s;
+  }
+
+  .form-group:focus-within label { color: var(--gold); }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 0.6rem 0;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.25s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .form-group select { cursor: pointer; }
+  .form-group select option { background: var(--steel); color: var(--white); }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-bottom-color: var(--gold); }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: rgba(107,115,133,0.5); font-size: 0.88rem; }
+
+  .form-group textarea { resize: none; height: 90px; line-height: 1.6; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '↓';
+    position: absolute;
+    right: 0; bottom: 0.65rem;
+    color: var(--gold);
+    font-size: 0.75rem;
+    pointer-events: none;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .submit-btn {
+    margin-top: 0.5rem;
+    width: 100%;
+    padding: 1rem 2rem;
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.15s;
+  }
+
+  .submit-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .submit-btn:active { transform: translateY(0); }
+
+  .field-error {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--error);
+    letter-spacing: 0.1em;
+    margin-top: 0.35rem;
+    display: none;
+  }
+
+  .has-error input,
+  .has-error textarea,
+  .has-error select { border-bottom-color: var(--error) !important; }
+  .has-error label { color: var(--error) !important; }
+  .has-error .field-error { display: block; }
+
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 3rem 0;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .success-msg .check {
+    width: 56px; height: 56px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 1.4rem;
+  }
+
+  .success-msg h3 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; color: var(--white); margin-bottom: 0.75rem; }
+  .success-msg p  { font-size: 0.85rem; color: var(--slate); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 2.5rem 5vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  footer .f-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+
+  footer .f-wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  footer .f-wordmark span { color: var(--gold); font-style: italic; }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    color: var(--slate);
+    text-transform: uppercase;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .logo-display { grid-template-columns: 1fr; }
+    .type-row { grid-template-columns: 1fr; }
+    .contact-inner { grid-template-columns: 1fr; }
+    .contact-left { min-height: auto; padding: 3.5rem 2rem; }
+    .contact-right { padding: 3.5rem 2rem; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 4rem; }
+    section { padding: 4rem 5vw; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">
+    <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+      <rect x="0" y="0" width="48" height="48" fill="#C9A84C"/>
+      <line x1="0" y1="13" x2="48" y2="13" stroke="rgba(0,0,0,0.2)" stroke-width="0.75"/>
+      <text x="24" y="36" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="28" font-weight="700" fill="rgba(0,0,0,0.6)">P</text>
+    </svg>
+    <div class="nav-wordmark">Pro<span>tek</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#why">Why Protek</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="#contact">Start a Project</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <div class="hero-content">
+    <div class="tag">Code &amp; Design Studio · Est. 2026</div>
+    <h1>PRO<span>TEK</span></h1>
+    <p class="hero-sub">Built for clarity. Engineered for impact.</p>
+    <p class="hero-desc">Full-service digital studio — development &amp; design, unified.</p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="#contact">Start a Project</a>
+      <a class="btn-ghost" href="#services">Our Services</a>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="names-section" id="about">
+  <div class="section-label">About</div>
+  <h2 class="section-title">Who We Are</h2>
+  <div class="names-grid" style="grid-template-columns: 1fr;">
+    <div class="name-card featured">
+      <h3>Protek</h3>
+      <p>We are a full-service tech studio founded by Protus — combining software development and graphic design under one roof. Whether you need a high-performance web application, a stunning brand identity, or both, Protek delivers precise, professional results for clients of every size.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="logo-showcase" id="services">
+  <div class="section-label">What We Do</div>
+  <h2 class="section-title">Our Services</h2>
+  <div class="names-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+    <div class="name-card featured">
+      <div class="badge">Development</div>
+      <h3 style="font-size:1.8rem;">Code</h3>
+      <p>Custom web apps, full-stack development, APIs, and scalable software — built clean and fast. From landing pages to complex systems, we write code that works.</p>
+    </div>
+    <div class="name-card">
+      <div class="badge">Creative</div>
+      <h3 style="font-size:1.8rem;">Design</h3>
+      <p>Brand identities, UI/UX, graphic design, and visual systems. We make your product look as sharp as it performs — design that communicates and converts.</p>
+    </div>
+    <div class="name-card">
+      <div class="badge">Full Package</div>
+      <h3 style="font-size:1.8rem;">Both</h3>
+      <p>Need code and design together? Protek is your one-stop studio. No back-and-forth between agencies — just one team that speaks both languages fluently.</p>
+    </div>
+  </div>
+  <div style="margin-top:3rem; background:var(--steel); padding:2.5rem; border-left:3px solid var(--gold); display:flex; align-items:center; gap:2rem; flex-wrap:wrap;">
+    <div style="flex:1; min-width:200px;">
+      <div class="section-label" style="margin-bottom:0.5rem;">Our Logo</div>
+      <p style="font-size:0.85rem; color:var(--slate); line-height:1.7;">The framed P — your mark of quality on every deliverable.</p>
+    </div>
+    <div style="background:var(--gold); padding:2.5rem 3rem; display:flex; align-items:center; gap:14px;">
+      <svg width="52" height="52" viewBox="0 0 48 48" fill="none">
+        <rect x="2" y="2" width="44" height="44" stroke="rgba(0,0,0,0.45)" stroke-width="1.5"/>
+        <line x1="2" y1="14" x2="46" y2="14" stroke="rgba(0,0,0,0.2)" stroke-width="0.75"/>
+        <text x="24" y="36" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="28" font-weight="700" fill="rgba(0,0,0,0.6)">P</text>
+      </svg>
+      <div>
+        <div class="logo-wordmark" style="font-size:2.2rem; color:var(--ink);">Pro<span style="color:rgba(0,0,0,0.5); font-style:italic; font-weight:300;">tek</span></div>
+        <div class="logo-tagline" style="color:rgba(0,0,0,0.45);">Code · Design · Solutions</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TYPOGRAPHY / BRAND -->
+<section class="type-section" id="type">
+  <div class="section-label">Type System</div>
+  <h2 class="section-title">How Protek Speaks</h2>
+  <div class="type-rows">
+    <div class="type-row">
+      <div class="type-meta"><strong>Display</strong>Cormorant Garamond<br>Light · 300<br>Hero &amp; page titles</div>
+      <div class="t-display">Protek.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Heading</strong>Cormorant Garamond<br>Semibold · 600<br>Section titles</div>
+      <div class="t-heading">Code that works. Design that converts.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Body</strong>DM Sans<br>Light · 300<br>All paragraph text</div>
+      <div class="t-body">Protek delivers end-to-end digital solutions — from the architecture powering your backend to the visual identity your customers remember. One studio. Every layer.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Mono / Label</strong>DM Mono<br>Regular · 400<br>Tags, labels &amp; code</div>
+      <div class="t-mono">protek.dev · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="274f424b4b486757554853424c094e48">[email&#160;protected]</a> · Est. 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY PROTEK -->
+<section class="voice-section" id="why">
+  <div class="section-label">Why Protek</div>
+  <h2 class="section-title">What Sets Us Apart</h2>
+  <div class="voice-grid">
+    <div class="voice-item"><div class="icon">⚙️</div><h4>Precise</h4><p>No bloat, no guesswork. Every line of code and every design decision is intentional. Clients trust us to get it right the first time.</p></div>
+    <div class="voice-item"><div class="icon">🏛️</div><h4>Expert-Led</h4><p>Protek is founder-led. You work directly with the person building your product — not a middleman. Your project always gets senior attention.</p></div>
+    <div class="voice-item"><div class="icon">🔗</div><h4>Unified</h4><p>Code and design are not separate services at Protek — they are a single, cohesive practice. No handoff friction. No broken phone games.</p></div>
+    <div class="voice-item"><div class="icon">🌐</div><h4>Open to All</h4><p>From solo founders to growing companies, Protek works with clients at every stage. Professional quality without the agency price tag or the runaround.</p></div>
+  </div>
+  <div style="background:var(--steel); padding:2.5rem; border-left:3px solid var(--gold);">
+    <div class="section-label" style="margin-bottom:0.75rem;">Our Promise</div>
+    <p style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:400; color:var(--white); line-height:1.3;">Built for clarity. Engineered for impact.</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-inner">
+    <!-- Left -->
+    <div class="contact-left">
+      <div class="contact-left-body">
+        <div class="section-label" style="margin-bottom:2rem">Contact</div>
+        <h2>Let's build<br>something <em>great.</em></h2>
+        <p>Tell us what you're working on. Whether it's a quick project or a long-term partnership, we respond to every inquiry within 24 hours.</p>
+        <div class="services-list">
+          <div class="service-item"><span class="service-dot"></span>Custom Software Development</div>
+          <div class="service-item"><span class="service-dot"></span>Web & App Design</div>
+          <div class="service-item"><span class="service-dot"></span>Brand Identity & Graphics</div>
+          <div class="service-item"><span class="service-dot"></span>Full-Stack Solutions</div>
+        </div>
+      </div>
+      <div class="contact-left-footer">
+        <p>© 2026 Protek · All rights reserved</p>
+      </div>
+    </div>
+
+    <!-- Right (form) -->
+    <div class="contact-right">
+      <div id="formWrapper">
+        <div class="form-label-top">Get in Touch</div>
+
+        <div class="form-row">
+          <div class="form-group" id="fg-name">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Jane Smith">
+            <div class="field-error">Please enter your name</div>
+          </div>
+          <div class="form-group" id="fg-email">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="jane@company.com">
+            <div class="field-error">Enter a valid email</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="company">Company <span style="color:var(--slate);font-size:0.55rem;">(optional)</span></label>
+          <input type="text" id="company" placeholder="Your company name">
+        </div>
+
+        <div class="form-group" id="fg-service">
+          <label for="service">Service Needed</label>
+          <div class="select-wrap">
+            <select id="service">
+              <option value="" disabled selected>Select a service...</option>
+              <option>Software / Web Development</option>
+              <option>Graphic Design / Branding</option>
+              <option>Both — Code & Design</option>
+              <option>Something else</option>
+            </select>
+          </div>
+          <div class="field-error">Please select a service</div>
+        </div>
+
+        <div class="form-group">
+          <label for="budget">Budget Range <span style="color:var(--slate);font-size:0.55rem;">(optional)</span></label>
+          <div class="select-wrap">
+            <select id="budget">
+              <option value="" disabled selected>Select a range...</option>
+              <option>Under $500</option>
+              <option>$500 – $2,000</option>
+              <option>$2,000 – $5,000</option>
+              <option>$5,000+</option>
+              <option>Let's discuss</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" id="fg-message">
+          <label for="message">Project Details</label>
+          <textarea id="message" placeholder="Describe your project, goals, or any questions..."></textarea>
+          <div class="field-error">Please describe your project</div>
+        </div>
+
+        <button class="submit-btn" onclick="handleSubmit()">Send Message →</button>
+      </div>
+
+      <div class="success-msg" id="successMsg">
+        <div class="check">✓</div>
+        <h3>Message received.</h3>
+        <p>Thank you for reaching out. We'll be in touch within 24 hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a class="f-logo" href="#hero">
+    <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+      <rect x="0" y="0" width="48" height="48" fill="#C9A84C"/>
+      <line x1="0" y1="13" x2="48" y2="13" stroke="rgba(0,0,0,0.2)" stroke-width="0.75"/>
+      <text x="24" y="36" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="28" font-weight="700" fill="rgba(0,0,0,0.6)">P</text>
+    </svg>
+    <div class="f-wordmark">Pro<span>tek</span></div>
+  </a>
+  <p>© 2026 Protek · All rights reserved</p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  function validate() {
+    let valid = true;
+    const fields = [
+      { id: 'fg-name',    input: 'name',    check: v => v.trim().length >= 2 },
+      { id: 'fg-email',   input: 'email',   check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+      { id: 'fg-service', input: 'service', check: v => v !== '' },
+      { id: 'fg-message', input: 'message', check: v => v.trim().length >= 10 },
+    ];
+    fields.forEach(f => {
+      const fg = document.getElementById(f.id);
+      const val = document.getElementById(f.input).value;
+      if (!f.check(val)) { fg.classList.add('has-error'); valid = false; }
+      else fg.classList.rem
