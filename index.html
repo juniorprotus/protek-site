@@ -1003,34 +1003,45 @@
     btn.textContent = 'Sending…';
     btn.disabled = true;
 
-    const data = {
-      name:    document.getElementById('name').value,
-      email:   document.getElementById('email').value,
-      company: document.getElementById('company').value,
-      service: document.getElementById('service').value,
-      budget:  document.getElementById('budget').value,
-      message: document.getElementById('message').value,
-    };
+    // Use FormData instead of JSON — this is how Formspree expects submissions
+    // by default and avoids CORS preflight issues that cause the network error
+    // even when the email is successfully delivered on Formspree's end.
+    const formData = new FormData();
+    formData.append('name',    document.getElementById('name').value);
+    formData.append('email',   document.getElementById('email').value);
+    formData.append('company', document.getElementById('company').value);
+    formData.append('service', document.getElementById('service').value);
+    formData.append('budget',  document.getElementById('budget').value);
+    formData.append('message', document.getElementById('message').value);
 
     try {
       const res = await fetch('https://formspree.io/f/maqpqlyy', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body:    JSON.stringify(data),
+        method: 'POST',
+        body:   formData,
+        // No Content-Type header — the browser sets it automatically with the
+        // correct multipart boundary when using FormData, which Formspree needs.
+        headers: { 'Accept': 'application/json' },
       });
 
-      if (res.ok) {
+      // Formspree returns { ok: true } in the JSON body on success.
+      // We parse this instead of trusting res.ok alone because redirects
+      // can make res.ok unreliable.
+      const json = await res.json().catch(() => ({ ok: res.ok }));
+
+      if (json.ok) {
         document.getElementById('contactForm').style.display = 'none';
         document.getElementById('successMsg').style.display  = 'flex';
       } else {
+        const errorMsg = json.error || 'Something went wrong. Please try again.';
         btn.textContent = 'Try Again';
         btn.disabled = false;
-        alert('Something went wrong. Please try again.');
+        alert(errorMsg);
       }
     } catch (err) {
+      // Only fires on genuine network failure (device fully offline etc.)
       btn.textContent = 'Try Again';
       btn.disabled = false;
-      alert('Network error. Please check your connection and try again.');
+      alert('Could not reach the server. Please check your connection.');
     }
   }
 
