@@ -1016,29 +1016,40 @@
 
     try {
       const res = await fetch('https://formspree.io/f/maqpqlyy', {
-        method: 'POST',
-        body:   formData,
-        // No Content-Type header — the browser sets it automatically with the
-        // correct multipart boundary when using FormData, which Formspree needs.
-        headers: { 'Accept': 'application/json' },
+        method:   'POST',
+        body:     formData,
+        // 'Accept: application/json' tells Formspree to return JSON instead
+        // of redirecting to a thank-you page. No Content-Type needed —
+        // the browser sets that correctly for FormData automatically.
+        headers:  { 'Accept': 'application/json' },
+        // Do NOT follow redirects. If Formspree sends a redirect (which it
+        // sometimes does after success), 'manual' catches it here so we can
+        // treat it as success rather than letting fetch chase the redirect
+        // and crash trying to parse the resulting HTML page as JSON.
+        redirect: 'manual',
       });
 
-      // Formspree returns { ok: true } in the JSON body on success.
-      // We parse this instead of trusting res.ok alone because redirects
-      // can make res.ok unreliable.
-      const json = await res.json().catch(() => ({ ok: res.ok }));
-
-      if (json.ok) {
+      // res.type === 'opaqueredirect' means Formspree redirected after success.
+      // res.ok covers a normal 200 JSON success response.
+      // Both cases mean the submission went through — show the thank-you screen.
+      if (res.ok || res.type === 'opaqueredirect') {
         document.getElementById('contactForm').style.display = 'none';
         document.getElementById('successMsg').style.display  = 'flex';
-      } else {
-        const errorMsg = json.error || 'Something went wrong. Please try again.';
-        btn.textContent = 'Try Again';
-        btn.disabled = false;
-        alert(errorMsg);
+        return; // done — no further processing needed
       }
+
+      // If we reach here, Formspree returned a genuine error (e.g. 422).
+      // Try to read their error message from the response body.
+      const json = await res.json().catch(() => ({}));
+      const errorMsg = json.error || 'Something went wrong. Please try again.';
+      btn.textContent = 'Try Again';
+      btn.disabled = false;
+      alert(errorMsg);
+
     } catch (err) {
-      // Only fires on genuine network failure (device fully offline etc.)
+      // This catch block now only fires for a true network failure —
+      // e.g. the device is fully offline. It will NOT fire on a successful
+      // Formspree submission that happened to return a redirect.
       btn.textContent = 'Try Again';
       btn.disabled = false;
       alert('Could not reach the server. Please check your connection.');
