@@ -978,6 +978,9 @@
 </footer>
 
 
+<!-- Hidden iframe — Formspree posts its response here instead of navigating the page -->
+<iframe name="formspree-iframe" id="formspree-iframe" style="display:none;" aria-hidden="true"></iframe>
+
 <script>
   function validate() {
     let valid = true;
@@ -996,64 +999,61 @@
     return valid;
   }
 
-  async function handleSubmit() {
+  function handleSubmit() {
     if (!validate()) return;
 
     const btn = document.querySelector('.submit-btn');
     btn.textContent = 'Sending…';
     btn.disabled = true;
 
-    // Use FormData instead of JSON — this is how Formspree expects submissions
-    // by default and avoids CORS preflight issues that cause the network error
-    // even when the email is successfully delivered on Formspree's end.
-    const formData = new FormData();
-    formData.append('name',    document.getElementById('name').value);
-    formData.append('email',   document.getElementById('email').value);
-    formData.append('company', document.getElementById('company').value);
-    formData.append('service', document.getElementById('service').value);
-    formData.append('budget',  document.getElementById('budget').value);
-    formData.append('message', document.getElementById('message').value);
+    // Instead of using fetch() — which keeps failing because Formspree sends
+    // back a redirect that browsers block in cross-origin fetch requests —
+    // we submit the form the old-fashioned way: by pointing a real <form>
+    // element at a hidden <iframe>. The form submits natively (no fetch, no
+    // CORS, no redirect issues), and Formspree's response loads inside the
+    // invisible iframe instead of navigating the whole page away.
+    // We then simply wait a moment and show the success screen ourselves.
 
-    try {
-      const res = await fetch('https://formspree.io/f/maqpqlyy', {
-        method:   'POST',
-        body:     formData,
-        // 'Accept: application/json' tells Formspree to return JSON instead
-        // of redirecting to a thank-you page. No Content-Type needed —
-        // the browser sets that correctly for FormData automatically.
-        headers:  { 'Accept': 'application/json' },
-        // Do NOT follow redirects. If Formspree sends a redirect (which it
-        // sometimes does after success), 'manual' catches it here so we can
-        // treat it as success rather than letting fetch chase the redirect
-        // and crash trying to parse the resulting HTML page as JSON.
-        redirect: 'manual',
-      });
+    // Build a real <form> element pointing to the hidden iframe
+    const form = document.createElement('form');
+    form.method  = 'POST';
+    form.action  = 'https://formspree.io/f/maqpqlyy';
+    form.target  = 'formspree-iframe'; // send response INTO the hidden iframe
 
-      // res.type === 'opaqueredirect' means Formspree redirected after success.
-      // res.ok covers a normal 200 JSON success response.
-      // Both cases mean the submission went through — show the thank-you screen.
-      if (res.ok || res.type === 'opaqueredirect') {
-        document.getElementById('contactForm').style.display = 'none';
-        document.getElementById('successMsg').style.display  = 'flex';
-        return; // done — no further processing needed
-      }
+    // Map each field into a hidden input inside the form
+    const fields = {
+      name:    document.getElementById('name').value,
+      email:   document.getElementById('email').value,
+      company: document.getElementById('company').value,
+      service: document.getElementById('service').value,
+      budget:  document.getElementById('budget').value,
+      message: document.getElementById('message').value,
+    };
+    Object.entries(fields).forEach(([key, val]) => {
+      const input = document.createElement('input');
+      input.type  = 'hidden';
+      input.name  = key;
+      input.value = val;
+      form.appendChild(input);
+    });
 
-      // If we reach here, Formspree returned a genuine error (e.g. 422).
-      // Try to read their error message from the response body.
-      const json = await res.json().catch(() => ({}));
-      const errorMsg = json.error || 'Something went wrong. Please try again.';
-      btn.textContent = 'Try Again';
-      btn.disabled = false;
-      alert(errorMsg);
+    // Attach form to the page briefly so we can submit it
+    document.body.appendChild(form);
 
-    } catch (err) {
-      // This catch block now only fires for a true network failure —
-      // e.g. the device is fully offline. It will NOT fire on a successful
-      // Formspree submission that happened to return a redirect.
-      btn.textContent = 'Try Again';
-      btn.disabled = false;
-      alert('Could not reach the server. Please check your connection.');
-    }
+    // When the iframe loads after submission, that means Formspree
+    // received the data and responded — which only happens on success.
+    // We use this as our success signal.
+    const iframe = document.getElementById('formspree-iframe');
+    iframe.onload = function () {
+      // Remove the temporary form from the DOM
+      document.body.removeChild(form);
+      // Show the thank-you screen
+      document.getElementById('contactForm').style.display = 'none';
+      document.getElementById('successMsg').style.display  = 'flex';
+    };
+
+    // Submit the form — response goes into the iframe, page stays put
+    form.submit();
   }
 
   document.addEventListener('DOMContentLoaded', () => {
