@@ -900,66 +900,80 @@
       <div id="formWrapper">
         <div class="form-label-top">Get in Touch</div>
 
-        <div class="form-row">
-          <div class="form-group" id="fg-name">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" placeholder="Jane Smith">
-            <div class="field-error">Please enter your name</div>
+        <form
+          id="contactForm"
+          action="https://formspree.io/f/maqpqlyy"
+          method="POST"
+        >
+          <!-- After Formspree processes the form it redirects here.
+               The ?submitted=true lets our JS know to show the thank-you screen. -->
+          <input type="hidden" name="_next" value="https://protek-site.vercel.app/?submitted=true">
+          <!-- Disable Formspree's own thank-you page since we handle it ourselves -->
+          <input type="hidden" name="_subject" value="New Protek Contact Form Submission">
+
+          <div class="form-row">
+            <div class="form-group" id="fg-name">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" placeholder="Jane Smith" required>
+              <div class="field-error">Please enter your name</div>
+            </div>
+            <div class="form-group" id="fg-email">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="jane@company.com" required>
+              <div class="field-error">Enter a valid email</div>
+            </div>
           </div>
-          <div class="form-group" id="fg-email">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="jane@company.com">
-            <div class="field-error">Enter a valid email</div>
+
+          <div class="form-group">
+            <label for="company">Company <span style="color:var(--slate);font-size:0.55rem;">(optional)</span></label>
+            <input type="text" id="company" name="company" placeholder="Your company name">
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="company">Company <span style="color:var(--slate);font-size:0.55rem;">(optional)</span></label>
-          <input type="text" id="company" placeholder="Your company name">
-        </div>
-
-        <div class="form-group" id="fg-service">
-          <label for="service">Service Needed</label>
-          <div class="select-wrap">
-            <select id="service">
-              <option value="" disabled selected>Select a service...</option>
-              <option>Software / Web Development</option>
-              <option>Graphic Design / Branding</option>
-              <option>Both — Code & Design</option>
-              <option>Something else</option>
-            </select>
+          <div class="form-group" id="fg-service">
+            <label for="service">Service Needed</label>
+            <div class="select-wrap">
+              <select id="service" name="service" required>
+                <option value="" disabled selected>Select a service...</option>
+                <option>Web Development</option>
+                <option>Graphic Design</option>
+                <option>Brand Identity</option>
+                <option>UI / UX Design</option>
+                <option>Full-Stack Application</option>
+                <option>Both — Code &amp; Design</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field-error">Please select a service</div>
           </div>
-          <div class="field-error">Please select a service</div>
-        </div>
 
-        <div class="form-group">
-          <label for="budget">Budget Range <span style="color:var(--slate);font-size:0.55rem;">(optional)</span></label>
-          <div class="select-wrap">
-            <select id="budget">
-              <option value="" disabled selected>Select a range...</option>
-              <option>Under KES 10,000</option>
-              <option>KES 10,000 – 50,000</option>
-              <option>KES 50,000 – 150,000</option>
-              <option>KES 150,000+</option>
-              <option>Let's discuss</option>
-            </select>
+          <div class="form-group">
+            <label for="budget">Budget Range <span style="color:var(--slate);font-size:0.55rem;">(optional)</span></label>
+            <div class="select-wrap">
+              <select id="budget" name="budget">
+                <option value="" disabled selected>Select a range...</option>
+                <option>Under KES 10,000</option>
+                <option>KES 10,000 – 50,000</option>
+                <option>KES 50,000 – 150,000</option>
+                <option>KES 150,000+</option>
+                <option>Let's discuss</option>
+              </select>
+            </div>
           </div>
-        </div>
 
-        <div class="form-group" id="fg-message">
-          <label for="message">Project Details</label>
-          <textarea id="message" placeholder="Describe your project, goals, or any questions..."></textarea>
-          <div class="field-error">Please describe your project</div>
-        </div>
+          <div class="form-group" id="fg-message">
+            <label for="message">Project Details</label>
+            <textarea id="message" name="message" placeholder="Describe your project, goals, or any questions..." required></textarea>
+            <div class="field-error">Please describe your project</div>
+          </div>
 
-        <button class="submit-btn" onclick="handleSubmit()">Send Message →</button>
-      </div>
+          <button type="submit" class="submit-btn" onclick="return validateForm()">Send Message →</button>
+        </form>
 
       <div class="success-msg" id="successMsg">
         <div class="check">✓</div>
         <h3>Message received.</h3>
         <p>Thank you for reaching out. We'll be in touch within 24 hours.</p>
-      </div>
+      </div></div>
     </div>
   </div>
 </section>
@@ -978,92 +992,62 @@
 </footer>
 
 
-<!-- Hidden iframe — Formspree posts its response here instead of navigating the page -->
-<iframe name="formspree-iframe" id="formspree-iframe" style="display:none;" aria-hidden="true"></iframe>
-
 <script>
-  function validate() {
+  // ── Validate required fields before submitting ─────────────────────────────
+  // This runs when the user clicks Send. If any required field is empty or
+  // invalid, we highlight it and return false — which cancels the form submit.
+  // If everything is filled in correctly, we return true and the browser
+  // submits the form natively to Formspree. No fetch, no CORS, no problems.
+  function validateForm() {
     let valid = true;
-    const fields = [
-      { id: 'fg-name',    input: 'name',    check: v => v.trim().length >= 2 },
-      { id: 'fg-email',   input: 'email',   check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
-      { id: 'fg-service', input: 'service', check: v => v !== '' },
-      { id: 'fg-message', input: 'message', check: v => v.trim().length >= 10 },
+
+    const checks = [
+      { groupId: 'fg-name',    inputId: 'name',    test: v => v.trim().length >= 2 },
+      { groupId: 'fg-email',   inputId: 'email',   test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+      { groupId: 'fg-service', inputId: 'service', test: v => v !== '' },
+      { groupId: 'fg-message', inputId: 'message', test: v => v.trim().length >= 10 },
     ];
-    fields.forEach(f => {
-      const fg = document.getElementById(f.id);
-      const val = document.getElementById(f.input).value;
-      if (!f.check(val)) { fg.classList.add('has-error'); valid = false; }
-      else fg.classList.remove('has-error');
-    });
-    return valid;
-  }
 
-  function handleSubmit() {
-    if (!validate()) return;
-
-    const btn = document.querySelector('.submit-btn');
-    btn.textContent = 'Sending…';
-    btn.disabled = true;
-
-    // Instead of using fetch() — which keeps failing because Formspree sends
-    // back a redirect that browsers block in cross-origin fetch requests —
-    // we submit the form the old-fashioned way: by pointing a real <form>
-    // element at a hidden <iframe>. The form submits natively (no fetch, no
-    // CORS, no redirect issues), and Formspree's response loads inside the
-    // invisible iframe instead of navigating the whole page away.
-    // We then simply wait a moment and show the success screen ourselves.
-
-    // Build a real <form> element pointing to the hidden iframe
-    const form = document.createElement('form');
-    form.method  = 'POST';
-    form.action  = 'https://formspree.io/f/maqpqlyy';
-    form.target  = 'formspree-iframe'; // send response INTO the hidden iframe
-
-    // Map each field into a hidden input inside the form
-    const fields = {
-      name:    document.getElementById('name').value,
-      email:   document.getElementById('email').value,
-      company: document.getElementById('company').value,
-      service: document.getElementById('service').value,
-      budget:  document.getElementById('budget').value,
-      message: document.getElementById('message').value,
-    };
-    Object.entries(fields).forEach(([key, val]) => {
-      const input = document.createElement('input');
-      input.type  = 'hidden';
-      input.name  = key;
-      input.value = val;
-      form.appendChild(input);
+    checks.forEach(({ groupId, inputId, test }) => {
+      const group = document.getElementById(groupId);
+      const value = document.getElementById(inputId).value;
+      if (!test(value)) {
+        group.classList.add('has-error');
+        valid = false;
+      } else {
+        group.classList.remove('has-error');
+      }
     });
 
-    // Attach form to the page briefly so we can submit it
-    document.body.appendChild(form);
-
-    // When the iframe loads after submission, that means Formspree
-    // received the data and responded — which only happens on success.
-    // We use this as our success signal.
-    const iframe = document.getElementById('formspree-iframe');
-    iframe.onload = function () {
-      // Remove the temporary form from the DOM
-      document.body.removeChild(form);
-      // Show the thank-you screen
-      document.getElementById('contactForm').style.display = 'none';
-      document.getElementById('successMsg').style.display  = 'flex';
-    };
-
-    // Submit the form — response goes into the iframe, page stays put
-    form.submit();
+    return valid; // true = browser submits the form; false = submission blocked
   }
 
+  // ── Clear error highlight as the user types ────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    ['name','email','service','message'].forEach(id => {
+    ['name', 'email', 'service', 'message'].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.addEventListener('input', () => {
-        const fg = el.closest('.form-group');
-        if (fg) fg.classList.remove('has-error');
-      });
+      if (el) {
+        el.addEventListener('input', () => {
+          const group = el.closest('.form-group');
+          if (group) group.classList.remove('has-error');
+        });
+      }
     });
+
+    // ── Show thank-you screen if the page loaded after a successful submission
+    // When Formspree finishes processing the form, it redirects the browser
+    // back to our site with ?submitted=true in the URL. We check for that
+    // here and swap out the form for the success message automatically.
+    // This is 100% reliable — no fetch, no iframe, no cross-origin issues.
+    if (window.location.search.includes('submitted=true')) {
+      const form = document.getElementById('contactForm');
+      const msg  = document.getElementById('successMsg');
+      if (form) form.style.display = 'none';
+      if (msg)  msg.style.display  = 'flex';
+
+      // Clean the URL so it looks tidy (removes the ?submitted=true)
+      window.history.replaceState({}, '', window.location.pathname + '#contact');
+    }
   });
 </script>
 </body>
